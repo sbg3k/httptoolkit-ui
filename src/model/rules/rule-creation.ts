@@ -133,8 +133,10 @@ function buildRequestMatchers(request: HtkRequest) {
     return [
         new (HttpRule.MethodMatchers[request.method as MethodName] || HttpRule.WildcardMatcher)(),
         new matchers.SimplePathMatcher(path),
-        new matchers.QueryMatcher(
-            querystring.parse(query) as ({ [key: string]: string | string[] })
+        ...(query ?
+            [new matchers.QueryMatcher(
+                querystring.parse(query) as ({ [key: string]: string | string[] })
+            )] : []
         ),
         ...bodyMatcher
     ];
